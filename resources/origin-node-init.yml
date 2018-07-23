@@ -1,9 +1,12 @@
 #cloud-config
+output: { all: "| tee -a /tmp/cloud-init-output.log" }
+
 cloud_config_modules:
   - package-update-upgrade-install
   - disk_setup
   - mounts
   - cc_write_files
+  - runcmd
 
 write_files:
   - path: /etc/sysconfig/docker-storage-setup
@@ -24,7 +27,6 @@ packages:
   - bash-completion
   - bind-utils
   - bridge-utils
-  - docker-python
   - git
   - httpd-tools
   - iptables-services
