@@ -1,0 +1,76 @@
+#cloud-config
+cloud_config_modules:
+  - package-update-upgrade-install
+  - disk_setup
+  - mounts
+  - cc_write_files
+
+write_files:
+  - path: /etc/sysconfig/docker-storage-setup
+    permissions: 0644
+    owner: root
+    content: |
+        STORAGE_DRIVER=overlay2
+        DEVS="/dev/xvdf"
+        VG=docker-vg
+        CONTAINER_ROOT_LV_NAME="dockerlv"
+        CONTAINER_ROOT_LV_MOUNT_PATH="/var/lib/docker"
+        CONTAINER_ROOT_LV_SIZE=100%FREE
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - bash-completion
+  - bind-utils
+  - bridge-utils
+  - docker-python
+  - git
+  - httpd-tools
+  - iptables-services
+  - kernel
+  - kernel-tools
+  - kernel-tools-libs
+  - kexec-tools
+  - libcgroup
+  - libselinux-python
+  - lvm2
+  - net-tools
+  - NetworkManager
+  - psacct
+  - selinux-policy
+  - sos
+  - wget
+
+fs_setup:
+- label: ocp_emptydir
+  filesystem: xfs
+  device: /dev/xvdg
+  partition: auto
+
+mounts:
+- [ "LABEL=ocp_emptydir", "/var/lib/origin/openshift.local.volumes", xfs, "defaults,gquota" ]
+
+runcmd:
+  - sed -i 's/SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config
+  - rm -f /etc/localtime
+  - ln -s /usr/share/zoneinfo/UTC /etc/localtime
+  - systemctl restart dbus
+  - systemctl daemon-reload
+  - systemctl start NetworkManager
+  - systemctl enable NetworkManager
+  - sed 's/NM_CONTROLLED=no/NM_CONTROLLED=yes/' /etc/sysconfig/network-scripts/ifcfg-eth0 -i
+  - systemctl restart NetworkManager
+  - systemctl restart network
+  - yum-config-manager --enable rhui-REGION-rhel-server-extras
+  - yum install -y docker
+  - systemctl enable docker
+  - systemctl start docker
+  - echo "UseDNS no" >> /etc/ssh/sshd_config
+  - systemctl reload sshd
+  - mkdir /etc/aws
+  - [ sh, -c, 'echo -e "[Global]\nZone = $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)" > /etc/aws/aws.conf' ]
+  - yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  - sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
+  - yum -y --enablerepo=epel install htop
+  - echo Defaults:centos \!requiretty >> /etc/sudoers
