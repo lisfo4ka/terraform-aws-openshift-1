@@ -12,7 +12,6 @@ resource "aws_launch_configuration" "master" {
   security_groups = [
     "${aws_security_group.node.id}",
     "${aws_security_group.master_public.id}",
-    "${aws_security_group.master_lb_public.id}",
   ]
 
   key_name             = "${aws_key_pair.platform.id}"
@@ -45,26 +44,26 @@ resource "aws_launch_configuration" "master" {
   }
 }
 
-locals {
-  master_target_group_arns = [
-    "${aws_lb_target_group.master_insecure.arn}",
-    "${aws_lb_target_group.master-443.arn}",
-    "${aws_lb_target_group.master-8443.arn}",
-  ]
-
-  master_infra_target_group_arns = [
-    "${aws_lb_target_group.master_insecure.arn}",
-    "${aws_lb_target_group.master-443.arn}",
-    "${aws_lb_target_group.master-8443.arn}",
-    "${aws_lb_target_group.platform_public_insecure.arn}",
-    "${aws_lb_target_group.platform_public.arn}",
-  ]
-
-  # https://github.com/hashicorp/terraform/issues/12453
-  master_target_groups = [
-    "${split(",", var.infra_node_count > 0 ? join(",", local.master_target_group_arns) : join(",", local.master_infra_target_group_arns))}",
-  ]
-}
+# locals {
+#   master_target_group_arns = [
+#     "${aws_lb_target_group.master_insecure.arn}",
+#     "${aws_lb_target_group.master-443.arn}",
+#     "${aws_lb_target_group.master-8443.arn}",
+#   ]
+#
+#   master_infra_target_group_arns = [
+#     "${aws_lb_target_group.master_insecure.arn}",
+#     "${aws_lb_target_group.master-443.arn}",
+#     "${aws_lb_target_group.master-8443.arn}",
+#     "${aws_lb_target_group.platform_public_insecure.arn}",
+#     "${aws_lb_target_group.platform_public.arn}",
+#   ]
+#
+#   # https://github.com/hashicorp/terraform/issues/12453
+#   master_target_groups = [
+#     "${split(",", var.infra_node_count > 0 ? join(",", local.master_target_group_arns) : join(",", local.master_infra_target_group_arns))}",
+#   ]
+# }
 
 resource "aws_autoscaling_group" "master" {
   vpc_zone_identifier       = ["${local.node_scaling_subnet_ids}"]
@@ -77,7 +76,8 @@ resource "aws_autoscaling_group" "master" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.master.name}"
 
-  target_group_arns = ["${local.master_target_groups}"]
+  # target_group_arns = ["${local.master_target_groups}"]
+  load_balancers = ["${aws_elb.master.name}"]
 
   tag {
     key                 = "Name"

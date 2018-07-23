@@ -1,6 +1,5 @@
-# TODO Network LoadBalancer cannot be received packets from target instances
-resource "aws_elb" "master" {
-  name     = "${var.platform_name}-master-lb"
+resource "aws_elb" "infra" {
+  name     = "${var.platform_name}-infra-internal"
   internal = true
   subnets  = ["${var.private_subnet_ids}"]
 
@@ -8,12 +7,12 @@ resource "aws_elb" "master" {
     "${aws_security_group.node.id}",
   ]
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-lb"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-internal"))}"
 
   listener {
-    instance_port     = 8443
+    instance_port     = 443
     instance_protocol = "tcp"
-    lb_port           = 8443
+    lb_port           = 443
     lb_protocol       = "tcp"
   }
 
