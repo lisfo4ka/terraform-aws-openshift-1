@@ -52,6 +52,7 @@ mounts:
 - [ "LABEL=ocp_emptydir", "/var/lib/origin/openshift.local.volumes", xfs, "defaults,gquota" ]
 
 runcmd:
+  - yum-config-manager --enable rhui-REGION-rhel-server-extras
   - sed -i 's/SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config
   - rm -f /etc/localtime
   - ln -s /usr/share/zoneinfo/UTC /etc/localtime
@@ -62,10 +63,9 @@ runcmd:
   - sed 's/NM_CONTROLLED=no/NM_CONTROLLED=yes/' /etc/sysconfig/network-scripts/ifcfg-eth0 -i
   - systemctl restart NetworkManager
   - systemctl restart network
-  - yum-config-manager --enable rhui-REGION-rhel-server-extras
   - yum install -y docker
   - systemctl enable docker
-  - systemctl start docker
+  - systemctl start --no-block docker
   - echo "UseDNS no" >> /etc/ssh/sshd_config
   - systemctl reload sshd
   - mkdir /etc/aws
