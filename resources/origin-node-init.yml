@@ -11,7 +11,7 @@ write_files:
     owner: root
     content: |
         STORAGE_DRIVER=overlay2
-        DEVS="/dev/xvdf"
+        DEVS="/dev/nvme1n1"
         VG=docker-vg
         CONTAINER_ROOT_LV_NAME="dockerlv"
         CONTAINER_ROOT_LV_MOUNT_PATH="/var/lib/docker"
@@ -45,7 +45,7 @@ packages:
 fs_setup:
 - label: ocp_emptydir
   filesystem: xfs
-  device: /dev/xvdg
+  device: /dev/nvme2n1
   partition: auto
 
 mounts:
