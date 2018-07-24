@@ -7,6 +7,12 @@ resource "aws_elb" "master" {
     "${aws_security_group.node.id}",
   ]
 
+  access_logs {
+    bucket        = "${aws_s3_bucket.elb_logs.bucket}"
+    bucket_prefix = "master-private"
+    interval      = 5
+  }
+
   tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-internal"))}"
 
   listener {
@@ -38,6 +44,7 @@ resource "aws_elb" "master-public" {
 
   access_logs {
     bucket        = "${aws_s3_bucket.elb_logs.bucket}"
+    bucket_prefix = "master-public"
     interval      = 5
   }
 
