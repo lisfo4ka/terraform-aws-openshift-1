@@ -4,8 +4,8 @@ data "template_file" "inventory" {
   template = "${file("${path.module}/resources/inventory.template.cfg")}"
 
   vars {
-    public_hostname  = "master.${var.internet_facing == "external" ? var.platform_external_subdomain : var.platform_internal_subdomain}"
-    public_subdomain = "${var.internet_facing == "external" ? var.platform_external_subdomain : var.platform_internal_subdomain}"
+    platform_internal_subdomain = "${var.platform_internal_subdomain}"
+    master_default_subdomain = "${var.internet_facing == "external" ? format("%s.%s", var.platform_name, var.platform_external_subdomain) : var.platform_internal_subdomain}"
 
     cluster_id = "${var.platform_name}"
     user_name  = "${var.user_name}"
