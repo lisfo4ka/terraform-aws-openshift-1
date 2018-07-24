@@ -10,7 +10,14 @@ variable "platform_name" {}
 
 variable "platform_vpc_id" {}
 
+variable "platform_internal_subdomain" {}
+variable "platform_external_subdomain" {}
+
 variable "private_subnet_ids" {
+  type = "list"
+}
+
+variable "public_subnet_ids" {
   type = "list"
 }
 
@@ -29,10 +36,6 @@ variable "ami_id" {
 variable "user_name" {
   type = "string"
 }
-
-variable "master_public_dns_name" {}
-
-variable "platform_default_subdomain" {}
 
 variable "key_pair_private_key" {}
 
@@ -66,4 +69,9 @@ variable "tags" {
 
 variable "openshift_major_version" {
   type = "string"
+}
+
+variable "internet_facing" {
+  description = "Define if ELBs for master and infra nodes are internet-facing (exteral or internal)"
+  default = "internal"
 }

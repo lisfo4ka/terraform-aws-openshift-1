@@ -4,8 +4,8 @@ data "template_file" "inventory" {
   template = "${file("${path.module}/resources/inventory.template.cfg")}"
 
   vars {
-    public_hostname  = "${var.master_public_dns_name}"
-    public_subdomain = "${var.platform_default_subdomain}"
+    public_hostname  = "master.${var.platform_external_subdomain}"
+    public_subdomain = "${var.platform_external_subdomain}"
     cluster_id       = "${var.platform_name}"
     user_name        = "${var.user_name}"
   }

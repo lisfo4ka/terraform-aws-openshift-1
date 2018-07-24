@@ -1,7 +1,7 @@
 resource "aws_elb" "master" {
-  name     = "${var.platform_name}-master-internal-elb"
-  internal = true
-  subnets  = ["${var.private_subnet_ids}"]
+  name     = "${var.platform_name}-master-internal"
+  internal = "${var.internet_facing == "external" ? 0 : 1 }"
+  subnets = [ "${split(",", var.internet_facing == "external" ? join(",", var.public_subnet_ids) : join(",", var.private_subnet_ids))}"]
 
   security_groups = [
     "${aws_security_group.node.id}",
