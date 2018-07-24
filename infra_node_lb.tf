@@ -16,6 +16,13 @@ resource "aws_elb" "infra" {
     lb_protocol       = "tcp"
   }
 
+  listener {
+    instance_port     = "${var.gerrit_ssh_port}"
+    instance_protocol = "tcp"
+    lb_port           = "${var.gerrit_ssh_port}"
+    lb_protocol       = "tcp"
+  }
+
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 2

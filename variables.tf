@@ -74,3 +74,8 @@ variable "openshift_major_version" {
 variable "internet_facing" {
   description = "Define if ELBs for master and infra nodes are internet-facing (exteral or internal)"
 }
+
+variable "gerrit_ssh_port" {
+  description = "Gerrit SSH port. Update after EDP deploy"
+  default = "31000"
+}

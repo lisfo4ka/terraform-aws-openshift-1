@@ -15,6 +15,13 @@ resource "aws_security_group" "platform_public" {
     cidr_blocks = ["${var.public_access_cidrs}"]
   }
 
+  ingress {
+    from_port   = "${var.gerrit_ssh_port}"
+    to_port     = "${var.gerrit_ssh_port}"
+    protocol    = "tcp"
+    cidr_blocks = ["${var.public_access_cidrs}"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
