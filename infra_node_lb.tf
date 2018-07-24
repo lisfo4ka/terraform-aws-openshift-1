@@ -4,7 +4,7 @@ resource "aws_elb" "infra" {
   subnets  = ["${split(",", var.internet_facing == "external" ? join(",", var.public_subnet_ids) : join(",", var.private_subnet_ids))}"]
 
   security_groups = [
-    "${local.infra_security_groups}"
+    "${local.infra_security_groups}",
   ]
 
   tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-internal"))}"

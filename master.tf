@@ -39,17 +39,9 @@ resource "aws_launch_configuration" "master" {
 }
 
 locals {
-  master_lb_internal = [
-    "${aws_elb.master.name}",
-  ]
-
-  master_lb_external = [
-    "${aws_elb.master.name}",
-    "${aws_elb.master-public.name}",
-  ]
-
   master_lbs = [
-    "${split(",", var.internet_facing == "external" ? join(",", local.master_lb_external) : join(",", local.master_lb_internal))}",
+    "${aws_elb.master.name}",
+    "${join("", aws_elb.master-public.*.name)}",
   ]
 }
 

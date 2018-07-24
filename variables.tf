@@ -77,5 +77,5 @@ variable "internet_facing" {
 
 variable "gerrit_ssh_port" {
   description = "Gerrit SSH port. Update after EDP deploy"
-  default = "31000"
+  default     = "31000"
 }
