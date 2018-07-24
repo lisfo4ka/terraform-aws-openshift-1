@@ -73,5 +73,4 @@ variable "openshift_major_version" {
 
 variable "internet_facing" {
   description = "Define if ELBs for master and infra nodes are internet-facing (exteral or internal)"
-  default = "internal"
 }
