@@ -38,39 +38,18 @@ resource "aws_launch_configuration" "master" {
   }
 }
 
-# locals {
-#   master_target_group_arns = [
-#     "${aws_lb_target_group.master_insecure.arn}",
-#     "${aws_lb_target_group.master-443.arn}",
-#     "${aws_lb_target_group.master-8443.arn}",
-#   ]
-#
-#   master_infra_target_group_arns = [
-#     "${aws_lb_target_group.master_insecure.arn}",
-#     "${aws_lb_target_group.master-443.arn}",
-#     "${aws_lb_target_group.master-8443.arn}",
-#     "${aws_lb_target_group.platform_public_insecure.arn}",
-#     "${aws_lb_target_group.platform_public.arn}",
-#   ]
-#
-#   # https://github.com/hashicorp/terraform/issues/12453
-#   master_target_groups = [
-#     "${split(",", var.infra_node_count > 0 ? join(",", local.master_target_group_arns) : join(",", local.master_infra_target_group_arns))}",
-#   ]
-# }
-
 locals {
   master_lb_internal = [
-    "${aws_elb.master.name}"
+    "${aws_elb.master.name}",
   ]
 
   master_lb_external = [
     "${aws_elb.master.name}",
-    "${aws_elb.master-public.name}"
+    "${aws_elb.master-public.name}",
   ]
 
   master_lbs = [
-    "${split(",", var.internet_facing == "external" ? join(",", local.master_lb_external) : join(",", local.master_lb_internal))}"
+    "${split(",", var.internet_facing == "external" ? join(",", local.master_lb_external) : join(",", local.master_lb_internal))}",
   ]
 }
 
@@ -85,7 +64,6 @@ resource "aws_autoscaling_group" "master" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.master.name}"
 
-  # target_group_arns = ["${local.master_target_groups}"]
   load_balancers = ["${local.master_lbs}"]
 
   tag {
