@@ -1,7 +1,7 @@
 resource "aws_elb" "infra" {
-  name     = "${var.platform_name}-infra-internal"
+  name     = "${var.platform_name}-infra-${var.internet_facing}"
   internal = "${var.internet_facing == "external" ? 0 : 1 }"
-  subnets = [ "${split(",", var.internet_facing == "external" ? join(",", var.public_subnet_ids) : join(",", var.private_subnet_ids))}"]
+  subnets  = ["${split(",", var.internet_facing == "external" ? join(",", var.public_subnet_ids) : join(",", var.private_subnet_ids))}"]
 
   security_groups = [
     "${aws_security_group.node.id}",
