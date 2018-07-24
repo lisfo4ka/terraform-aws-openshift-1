@@ -16,7 +16,7 @@ locals {
 
 resource "aws_instance" "deployment" {
   ami                         = "${var.ami_id}"
-  instance_type               = "t2.micro"
+  instance_type               = "t2.small"
   subnet_id                   = "${var.private_subnet_ids[0]}"
   associate_public_ip_address = false
   key_name                    = "${aws_key_pair.platform.id}"
