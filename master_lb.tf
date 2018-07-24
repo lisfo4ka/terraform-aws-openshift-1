@@ -36,6 +36,11 @@ resource "aws_elb" "master-public" {
     "${aws_security_group.master_public.id}",
   ]
 
+  access_logs {
+    bucket        = "${aws_s3_bucket.elb_logs.bucket}"
+    interval      = 5
+  }
+
   tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-external"))}"
 
   listener {
