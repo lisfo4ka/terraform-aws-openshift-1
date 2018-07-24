@@ -23,3 +23,8 @@ resource "aws_iam_role_policy" "compute_node" {
   role   = "${aws_iam_role.compute_node.id}"
   policy = "${data.aws_iam_policy_document.compute_node.json}"
 }
+
+resource "aws_iam_instance_profile" "compute_node" {
+  name = "${var.platform_name}-compute-profile"
+  role = "${aws_iam_role.compute_node.name}"
+}

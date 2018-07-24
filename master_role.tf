@@ -35,3 +35,8 @@ resource "aws_iam_role_policy" "master" {
   role   = "${aws_iam_role.master.id}"
   policy = "${data.aws_iam_policy_document.master.json}"
 }
+
+resource "aws_iam_instance_profile" "master" {
+  name = "${var.platform_name}-master-profile"
+  role = "${aws_iam_role.master.name}"
+}

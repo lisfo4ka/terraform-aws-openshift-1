@@ -1,8 +1,3 @@
-resource "aws_iam_instance_profile" "master" {
-  name = "${var.platform_name}-master-profile"
-  role = "${aws_iam_role.master.name}"
-}
-
 resource "aws_launch_configuration" "master" {
   name_prefix   = "${var.platform_name}-master-"
   image_id      = "${var.ami_id}"

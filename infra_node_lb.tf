@@ -1,5 +1,5 @@
 resource "aws_elb" "infra" {
-  name     = "${var.platform_name}-infra-internal"
+  name     = "${var.platform_name}-infra-internal-elb"
   internal = true
   subnets  = ["${var.private_subnet_ids}"]
 

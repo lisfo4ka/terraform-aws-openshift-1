@@ -10,11 +10,6 @@ data "template_file" "deployment_init" {
   }
 }
 
-resource "aws_iam_instance_profile" "deployment" {
-  name = "${var.platform_name}-deployment-profile"
-  role = "${aws_iam_role.deployment.name}"
-}
-
 locals {
   deployment_ssh_user = "${(var.upstream) ? "centos" : "ec2-user"}"
 }

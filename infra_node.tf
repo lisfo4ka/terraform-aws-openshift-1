@@ -1,8 +1,3 @@
-resource "aws_iam_instance_profile" "infra_node" {
-  name = "${var.platform_name}-infra-node-profile"
-  role = "${aws_iam_role.infra_node.name}"
-}
-
 resource "aws_launch_configuration" "infra_node" {
   name_prefix   = "${var.platform_name}-infra-node-"
   image_id      = "${var.ami_id}"

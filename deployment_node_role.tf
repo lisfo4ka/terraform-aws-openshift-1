@@ -100,3 +100,8 @@ resource "aws_iam_role_policy" "deployment" {
   role   = "${aws_iam_role.deployment.id}"
   policy = "${data.aws_iam_policy_document.deployment.json}"
 }
+
+resource "aws_iam_instance_profile" "deployment" {
+  name = "${var.platform_name}-deployment-profile"
+  role = "${aws_iam_role.deployment.name}"
+}

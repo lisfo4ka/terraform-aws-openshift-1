@@ -1,8 +1,3 @@
-resource "aws_iam_instance_profile" "compute_node" {
-  name = "${var.platform_name}-compute-profile"
-  role = "${aws_iam_role.compute_node.name}"
-}
-
 resource "aws_launch_configuration" "compute_node" {
   name_prefix   = "${var.platform_name}-compute-node-"
   image_id      = "${var.ami_id}"
