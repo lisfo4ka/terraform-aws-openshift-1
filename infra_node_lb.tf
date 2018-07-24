@@ -7,6 +7,12 @@ resource "aws_elb" "infra" {
     "${local.infra_security_groups}",
   ]
 
+  access_logs {
+    bucket        = "${aws_s3_bucket.elb_logs.bucket}"
+    bucket_prefix = "infra"
+    interval      = 5
+  }
+
   tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-internal"))}"
 
   listener {
