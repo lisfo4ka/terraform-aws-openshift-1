@@ -5,4 +5,12 @@ runcmd:
  - yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
  - sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
  - yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct
+ - yum update
+ - yum -y install --enablerepo=epel python-pip python-wheel
+ - pip intsll --upgrade pip
+ - pip install -Iv ansible==2.4.2.0 boto
+ - mkdir -p /usr/share/ansible/openshift-ansible
+ - git clone -b release-3.7 https://github.com/openshift/openshift-ansible /usr/share/ansible/openshift-ansible
+ - wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py -O /usr/share/ansible/openshift-ansible/ec2.py
+ - chmod +x /usr/share/ansible/openshift-ansible/ec2.py
  
