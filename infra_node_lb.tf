@@ -4,7 +4,7 @@ resource "aws_elb" "infra" {
   subnets  = ["${split(",", var.internet_facing == "external" ? join(",", var.public_subnet_ids) : join(",", var.private_subnet_ids))}"]
 
   security_groups = [
-    "${aws_security_group.node.id}",
+    "${local.infra_security_groups}"
   ]
 
   tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-internal"))}"
@@ -23,4 +23,19 @@ resource "aws_elb" "infra" {
     target              = "TCP:22"
     interval            = 30
   }
+}
+
+locals {
+  infra_security_groups_internal = [
+    "${aws_security_group.node.id}",
+  ]
+
+  infra_security_groups_external = [
+    "${aws_security_group.node.id}",
+    "${aws_security_group.platform_public.id}",
+  ]
+
+  infra_security_groups = [
+    "${split(",", var.internet_facing == "external" ? join(",", local.infra_security_groups_external) : join(",", local.infra_security_groups_internal))}",
+  ]
 }
