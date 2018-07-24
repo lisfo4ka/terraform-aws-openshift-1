@@ -59,6 +59,21 @@ resource "aws_launch_configuration" "master" {
 #   ]
 # }
 
+locals {
+  master_lb_internal = [
+    "${aws_elb.master.name}"
+  ]
+
+  master_lb_external = [
+    "${aws_elb.master.name}",
+    "${aws_elb.master-public.name}"
+  ]
+
+  master_lbs = [
+    "${split(",", var.internet_facing == "external" ? join(",", local.master_lb_external) : join(",", local.master_lb_internal))}"
+  ]
+}
+
 resource "aws_autoscaling_group" "master" {
   vpc_zone_identifier       = ["${local.node_scaling_subnet_ids}"]
   name                      = "${var.platform_name}-master"
@@ -71,7 +86,7 @@ resource "aws_autoscaling_group" "master" {
   launch_configuration      = "${aws_launch_configuration.master.name}"
 
   # target_group_arns = ["${local.master_target_groups}"]
-  load_balancers = ["${aws_elb.master.name}"]
+  load_balancers = ["${local.master_lbs}"]
 
   tag {
     key                 = "Name"
