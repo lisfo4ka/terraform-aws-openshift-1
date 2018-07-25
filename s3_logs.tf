@@ -1,8 +1,9 @@
 data "aws_elb_service_account" "main" {}
 
 resource "aws_s3_bucket" "elb_logs" {
-  bucket = "${var.platform_name}-elb-logs"
-  acl    = "private"
+  bucket        = "${var.platform_name}-elb-logs"
+  acl           = "private"
+  force_destroy = true
 
   policy = <<POLICY
 {
