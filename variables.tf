@@ -11,14 +11,18 @@ variable "platform_name" {}
 variable "platform_vpc_id" {}
 
 variable "platform_internal_subdomain" {}
-variable "platform_external_subdomain" {}
+
+variable "platform_external_subdomain" {
+  default = ""
+}
 
 variable "private_subnet_ids" {
   type = "list"
 }
 
 variable "public_subnet_ids" {
-  type = "list"
+  default = []
+  type    = "list"
 }
 
 variable "operator_cidrs" {
