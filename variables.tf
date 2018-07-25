@@ -83,3 +83,8 @@ variable "gerrit_ssh_port" {
   description = "Gerrit SSH port. Update after EDP deploy"
   default     = "31000"
 }
+
+variable "deployer" {
+  description = "Option to deploy deployer node"
+  default     = false
+}

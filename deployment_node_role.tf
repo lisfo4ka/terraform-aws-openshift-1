@@ -1,4 +1,6 @@
 data "aws_iam_policy_document" "deployment" {
+  count = "${var.deployer}"
+
   statement {
     actions = [
       "ssm:DescribeAssociation",
@@ -91,17 +93,20 @@ data "aws_iam_policy_document" "deployment" {
 }
 
 resource "aws_iam_role" "deployment" {
+  count              = "${var.deployer}"
   name               = "${var.platform_name}-deployment-role"
   assume_role_policy = "${data.aws_iam_policy_document.ec2.json}"
 }
 
 resource "aws_iam_role_policy" "deployment" {
+  count  = "${var.deployer}"
   name   = "${var.platform_name}-deployment-policy"
   role   = "${aws_iam_role.deployment.id}"
   policy = "${data.aws_iam_policy_document.deployment.json}"
 }
 
 resource "aws_iam_instance_profile" "deployment" {
-  name = "${var.platform_name}-deployment-profile"
-  role = "${aws_iam_role.deployment.name}"
+  count = "${var.deployer}"
+  name  = "${var.platform_name}-deployment-profile"
+  role  = "${aws_iam_role.deployment.name}"
 }

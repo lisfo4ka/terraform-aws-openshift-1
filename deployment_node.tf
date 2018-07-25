@@ -1,4 +1,5 @@
 data "template_file" "deployment_init" {
+  count    = "${var.deployer}"
   template = "${(var.upstream) ? file("${path.module}/resources/origin-deployment-init.yml") : file("${path.module}/resources/deployment-init.yml")}"
 
   vars {
@@ -15,6 +16,7 @@ locals {
 }
 
 resource "aws_instance" "deployment" {
+  count                       = "${var.deployer}"
   ami                         = "${var.ami_id}"
   instance_type               = "t2.small"
   subnet_id                   = "${var.private_subnet_ids[0]}"
