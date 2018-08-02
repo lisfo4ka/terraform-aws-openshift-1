@@ -24,6 +24,13 @@ resource "aws_elb" "infra" {
   }
 
   listener {
+    instance_port     = 80
+    instance_protocol = "http"
+    lb_port           = 80
+    lb_protocol       = "http"
+  }
+
+  listener {
     instance_port     = "${var.gerrit_ssh_port}"
     instance_protocol = "tcp"
     lb_port           = "${var.gerrit_ssh_port}"
