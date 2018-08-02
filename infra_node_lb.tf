@@ -16,10 +16,11 @@ resource "aws_elb" "infra" {
   tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-internal"))}"
 
   listener {
-    instance_port     = 443
-    instance_protocol = "tcp"
-    lb_port           = 443
-    lb_protocol       = "tcp"
+    instance_port      = 443
+    instance_protocol  = "https"
+    lb_port            = 443
+    lb_protocol        = "https"
+    ssl_certificate_id = "${aws_acm_certificate_validation.openshift-cluster.certificate_arn}"
   }
 
   listener {
