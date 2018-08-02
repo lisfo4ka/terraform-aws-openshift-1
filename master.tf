@@ -56,6 +56,8 @@ resource "aws_autoscaling_group" "master" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.master.name}"
 
+  target_group_arns = ["${aws_lb_target_group.master_secure.arn}"]
+
   load_balancers = ["${local.master_lbs}"]
 
   tag {
