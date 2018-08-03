@@ -41,3 +41,39 @@ resource "aws_lb_target_group" "master_secure" {
     type = "lb_cookie"
   }
 }
+
+# with internal deployment we need to use the below ELB
+resource "aws_elb" "master-public" {
+  count    = "${var.internet_facing == "external" ? 0 : 1 }"
+  name     = "${var.platform_name}-master-external"
+  internal = false
+  subnets  = ["${var.public_subnet_ids}"]
+
+  security_groups = [
+    "${aws_security_group.node.id}",
+    "${aws_security_group.master_public.id}",
+  ]
+
+  access_logs {
+    bucket        = "${aws_s3_bucket.elb_logs.bucket}"
+    bucket_prefix = "master-public"
+    interval      = 5
+  }
+
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-external"))}"
+
+  listener {
+    instance_port     = 8443
+    instance_protocol = "tcp"
+    lb_port           = 8443
+    lb_protocol       = "tcp"
+  }
+
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    target              = "TCP:22"
+    interval            = 30
+  }
+}

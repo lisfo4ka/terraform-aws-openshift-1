@@ -38,13 +38,6 @@ resource "aws_launch_configuration" "master" {
   }
 }
 
-locals {
-  master_lbs = [
-    "${aws_elb.master.name}",
-    "${join("", aws_elb.master-public.*.name)}",
-  ]
-}
-
 resource "aws_autoscaling_group" "master" {
   vpc_zone_identifier       = ["${var.private_subnet_ids}"]
   name                      = "${var.platform_name}-master"
@@ -56,9 +49,10 @@ resource "aws_autoscaling_group" "master" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.master.name}"
 
+  # FIXME (will not work with internal deployment)
   target_group_arns = ["${aws_lb_target_group.master_secure.arn}"]
 
-  load_balancers = ["${local.master_lbs}"]
+  load_balancers = ["${concat(aws_elb.master.*.name, aws_elb.master-public.*.name)}"]
 
   tag {
     key                 = "Name"
