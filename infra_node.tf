@@ -47,77 +47,12 @@ resource "aws_autoscaling_group" "infra_node" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.infra_node.name}"
 
-  # target_group_arns = [
-  #   "${aws_lb_target_group.platform_public_insecure.arn}",
-  #   "${aws_lb_target_group.platform_public.arn}",
-  # ]
   load_balancers = ["${aws_elb.infra.name}"]
 
-  tag {
-    key                 = "Name"
-    value               = "${var.platform_name}-infra-node"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "cluster_role"
-    value               = "router"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "KubernetesCluster"
-    value               = "${var.platform_name}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "kubernetes.io/cluster/${var.platform_name}"
-    value               = "${var.platform_name}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "SysName"
-    value               = "EPAM"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "SysOwner"
-    value               = "marco.hernandez@regeneron.com"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Environment"
-    value               = "DEV"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "CostCenter"
-    value               = "0288"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "BusinessUnit"
-    value               = "RnD"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Department"
-    value               = "Research Management and Operations"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Backup"
-    value               = "True"
-    propagate_at_launch = true
-  }
+  tags = "${merge(var.tags, map(
+    "Name", "${var.platform_name}-infra-node",
+    "Role", "infra-node"
+   ))}"
 
   timeouts {
     delete = "15m"

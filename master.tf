@@ -52,71 +52,10 @@ resource "aws_autoscaling_group" "master" {
 
   load_balancers = ["${concat(aws_elb.master.*.name, aws_elb.master-public.*.name)}"]
 
-  tag {
-    key                 = "Name"
-    value               = "${var.platform_name}-master"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "cluster_role"
-    value               = "master"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "KubernetesCluster"
-    value               = "${var.platform_name}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "kubernetes.io/cluster/${var.platform_name}"
-    value               = "${var.platform_name}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "SysName"
-    value               = "EPAM"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "SysOwner"
-    value               = "marco.hernandez@regeneron.com"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Environment"
-    value               = "DEV"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "CostCenter"
-    value               = "0288"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "BusinessUnit"
-    value               = "RnD"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Department"
-    value               = "Research Management and Operations"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Backup"
-    value               = "True"
-    propagate_at_launch = true
-  }
+  tags = "${merge(var.tags, map(
+    "Name", "${var.platform_name}-master-node",
+    "Role", "master-node"
+   ))}"
 
   timeouts {
     delete = "15m"

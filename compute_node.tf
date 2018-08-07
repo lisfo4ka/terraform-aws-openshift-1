@@ -47,71 +47,10 @@ resource "aws_autoscaling_group" "compute_node" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.compute_node.name}"
 
-  tag {
-    key                 = "Name"
-    value               = "${var.platform_name}-compute-node"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "cluster_role"
-    value               = "node"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "KubernetesCluster"
-    value               = "${var.platform_name}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "kubernetes.io/cluster/${var.platform_name}"
-    value               = "${var.platform_name}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "SysName"
-    value               = "EPAM"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "SysOwner"
-    value               = "marco.hernandez@regeneron.com"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Environment"
-    value               = "DEV"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "CostCenter"
-    value               = "0288"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "BusinessUnit"
-    value               = "RnD"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Department"
-    value               = "Research Management and Operations"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Backup"
-    value               = "True"
-    propagate_at_launch = true
-  }
+  tags = "${merge(var.tags, map(
+    "Name", "${var.platform_name}-compute-node",
+    "Role", "compute-node"
+   ))}"
 
   timeouts {
     delete = "15m"
