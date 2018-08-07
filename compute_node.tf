@@ -47,10 +47,10 @@ resource "aws_autoscaling_group" "compute_node" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.compute_node.name}"
 
-  tags = "${merge(var.tags, map(
+  tags = ["${merge(var.tags, map(
     "Name", "${var.platform_name}-compute-node",
     "Role", "compute-node"
-   ))}"
+   ))}"]
 
   timeouts {
     delete = "15m"

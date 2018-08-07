@@ -52,10 +52,10 @@ resource "aws_autoscaling_group" "master" {
 
   load_balancers = ["${concat(aws_elb.master.*.name, aws_elb.master-public.*.name)}"]
 
-  tags = "${merge(var.tags, map(
+  tags = ["${merge(var.tags, map(
     "Name", "${var.platform_name}-master-node",
     "Role", "master-node"
-   ))}"
+   ))}"]
 
   timeouts {
     delete = "15m"

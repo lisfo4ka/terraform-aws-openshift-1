@@ -49,10 +49,10 @@ resource "aws_autoscaling_group" "infra_node" {
 
   load_balancers = ["${aws_elb.infra.name}"]
 
-  tags = "${merge(var.tags, map(
+  tags = ["${merge(var.tags, map(
     "Name", "${var.platform_name}-infra-node",
     "Role", "infra-node"
-   ))}"
+   ))}"]
 
   timeouts {
     delete = "15m"
