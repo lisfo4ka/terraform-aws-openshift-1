@@ -9,7 +9,7 @@ resource "aws_launch_configuration" "infra_node" {
     "${aws_security_group.platform_public.id}",
   ]
 
-  key_name             = "${aws_key_pair.platform.id}"
+  key_name             = "${var.ssh_key_pair_name}"
   user_data            = "${data.template_file.node_init.rendered}"
   iam_instance_profile = "${aws_iam_instance_profile.infra_node.name}"
   spot_price           = "${var.upstream ? var.infra_node_spot_price : ""}"

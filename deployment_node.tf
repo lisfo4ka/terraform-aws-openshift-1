@@ -21,7 +21,7 @@ resource "aws_instance" "deployment" {
   instance_type               = "t2.small"
   subnet_id                   = "${var.private_subnet_ids[0]}"
   associate_public_ip_address = false
-  key_name                    = "${aws_key_pair.platform.id}"
+  key_name                    = "${var.ssh_key_pair_name}"
 
   vpc_security_group_ids = [
     "${aws_security_group.deployment.id}",

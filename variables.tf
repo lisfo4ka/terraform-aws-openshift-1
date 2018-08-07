@@ -67,6 +67,8 @@ variable "infra_node_spot_price" {}
 
 variable "infra_node_instance_type" {}
 
+variable "ssh_key_pair_name" {}
+
 variable "tags" {
   type = "map"
 }

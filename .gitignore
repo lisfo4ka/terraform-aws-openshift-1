@@ -1,0 +1,23 @@
+venv/*
+target/*
+.settings/*
+.classpath
+.DS_Store
+.project
+.idea
+*.iml
+*/target
+npm-debug.log
+/bin/
+*.retry
+.gitkeep
+
+# terraform state file
+terraform.tfstate*
+# folder with plugins
+.terraform/
+
+# automaticaly generated files
+ec2.ini
+inventory.cfg
+=======

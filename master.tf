@@ -8,7 +8,7 @@ resource "aws_launch_configuration" "master" {
     "${aws_security_group.node.id}",
   ]
 
-  key_name             = "${aws_key_pair.platform.id}"
+  key_name             = "${var.ssh_key_pair_name}"
   user_data            = "${data.template_file.master_node_init.rendered}"
   iam_instance_profile = "${aws_iam_instance_profile.master.name}"
   spot_price           = "${var.upstream ? var.master_spot_price : ""}"
