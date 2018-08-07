@@ -20,7 +20,7 @@ resource "aws_instance" "deployment" {
   ami                         = "${var.ami_id}"
   instance_type               = "t2.small"
   subnet_id                   = "${var.public_subnet_ids[0]}"
-  associate_public_ip_address = false
+  associate_public_ip_address = true
   key_name                    = "${var.ssh_key_pair_name}"
 
   vpc_security_group_ids = [
