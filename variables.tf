@@ -41,8 +41,6 @@ variable "user_name" {
   type = "string"
 }
 
-variable "key_pair_private_key" {}
-
 variable "upstream" {}
 
 variable "rhn_username" {}
