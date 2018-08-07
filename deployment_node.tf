@@ -23,12 +23,9 @@ resource "aws_instance" "deployment" {
   associate_public_ip_address = false
   key_name                    = "${var.ssh_key_pair_name}"
 
-  vpc_security_group_ids = [
-    "${aws_security_group.deployment.id}",
-    "${aws_security_group.node.id}",
-  ]
+  vpc_security_group_ids = ["${coalescelist(var.infra_public_security_group_ids, aws_security_group.deployment.*.id)}"]
 
-  iam_instance_profile = "${aws_iam_instance_profile.deployment.name}"
+  iam_instance_profile = ""
 
   user_data = "${data.template_file.deployment_init.rendered}"
 

@@ -1,6 +1,7 @@
 resource "aws_security_group" "node" {
-  name        = "${var.platform_name}-node"
-  description = "Cluster node group for ${var.platform_name}"
+  count         = "${length(var.internal_security_group_ids) != 0 ? 0 : 1}"
+  name          = "${var.platform_name}-node"
+  description   = "Cluster node group for ${var.platform_name}"
 
   ingress {
     from_port   = 22

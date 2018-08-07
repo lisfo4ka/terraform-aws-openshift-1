@@ -6,10 +6,7 @@ resource "aws_lb" "master-alb" {
   load_balancer_type               = "application"
   enable_cross_zone_load_balancing = true
 
-  security_groups = [
-    "${aws_security_group.node.id}",
-    "${aws_security_group.master_public.id}",
-  ]
+  security_groups = ["${coalescelist(var.master_public_security_group_ids, aws_security_group.master_public.*.id)}"]
 
   tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-alb"))}"
 }
@@ -49,10 +46,7 @@ resource "aws_elb" "master-public" {
   internal = false
   subnets  = ["${var.public_subnet_ids}"]
 
-  security_groups = [
-    "${aws_security_group.node.id}",
-    "${aws_security_group.master_public.id}",
-  ]
+  security_groups = ["${coalescelist(var.master_public_security_group_ids, aws_security_group.master_public.*.id)}"]
 
   access_logs {
     bucket        = "${aws_s3_bucket.elb_logs.bucket}"

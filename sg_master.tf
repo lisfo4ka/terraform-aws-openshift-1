@@ -1,6 +1,7 @@
 resource "aws_security_group" "master_public" {
-  name        = "${var.platform_name}-master-public"
-  description = "Master public group for ${var.platform_name}"
+  count         = "${length(var.master_public_security_group_ids) != 0 ? 0 : 1}"
+  name          = "${var.platform_name}-master-public"
+  description   = "Master public group for ${var.platform_name}"
 
   ingress {
     from_port   = 8443
@@ -23,7 +24,7 @@ resource "aws_security_group" "master_public" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-public"))}"
+  tags          = "${merge(var.tags, map("Name", "${var.platform_name}-master-public"))}"
 
-  vpc_id = "${var.platform_vpc_id}"
+  vpc_id        = "${var.platform_vpc_id}"
 }

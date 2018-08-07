@@ -4,14 +4,11 @@ resource "aws_launch_configuration" "infra_node" {
   instance_type = "${var.infra_node_instance_type}"
   ebs_optimized = true
 
-  security_groups = [
-    "${aws_security_group.node.id}",
-    "${aws_security_group.platform_public.id}",
-  ]
+  security_groups = ["${coalescelist(var.internal_security_group_ids, aws_security_group.node.*.id)}"]
 
   key_name             = "${var.ssh_key_pair_name}"
   user_data            = "${data.template_file.node_init.rendered}"
-  iam_instance_profile = "${aws_iam_instance_profile.infra_node.name}"
+  iam_instance_profile = ""
   spot_price           = "${var.upstream ? var.infra_node_spot_price : ""}"
 
   lifecycle {

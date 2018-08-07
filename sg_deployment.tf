@@ -1,4 +1,5 @@
 resource "aws_security_group" "deployment" {
+  count       = "${length(var.infra_public_security_group_ids) != 0 ? 0 : 1}"
   name        = "${var.platform_name}-deployment"
   description = "Deployment node group for ${var.platform_name}"
 

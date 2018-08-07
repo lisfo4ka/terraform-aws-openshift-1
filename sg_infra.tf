@@ -1,5 +1,6 @@
 resource "aws_security_group" "platform_public" {
-  name = "${var.platform_name}-platform-public"
+  count         = "${length(var.infra_public_security_group_ids) != 0 ? 0 : 1}"
+  name          = "${var.platform_name}-platform-public"
 
   ingress {
     from_port   = 80

@@ -88,3 +88,15 @@ variable "deployer" {
   description = "Option to deploy deployer node"
   default     = false
 }
+
+variable "master_public_security_group_ids" {
+  type = "list"
+}
+
+variable "infra_public_security_group_ids" {
+  type = "list"
+}
+
+variable "internal_security_group_ids" {
+  type = "list"
+}
