@@ -19,11 +19,14 @@ resource "aws_instance" "deployment" {
   count                       = "${var.deployer}"
   ami                         = "${var.ami_id}"
   instance_type               = "t2.small"
-  subnet_id                   = "${var.private_subnet_ids[0]}"
+  subnet_id                   = "${var.public_subnet_ids[0]}"
   associate_public_ip_address = false
   key_name                    = "${var.ssh_key_pair_name}"
 
-  vpc_security_group_ids = ["${coalescelist(var.infra_public_security_group_ids, aws_security_group.deployment.*.id)}"]
+  vpc_security_group_ids = [
+    "${coalescelist(var.infra_public_security_group_ids, aws_security_group.deployment.*.id)}",
+    "${coalescelist(var.internal_security_group_ids, aws_security_group.node.*.id)}"
+  ]
 
   iam_instance_profile = ""
 
