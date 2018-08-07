@@ -47,10 +47,59 @@ resource "aws_autoscaling_group" "compute_node" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.compute_node.name}"
 
-  tags = ["${merge(var.tags, map(
-    "Name", "${var.platform_name}-compute-node",
-    "Role", "compute-node"
-   ))}"]
+  tag {
+    key                 = "Name"
+    value               = "${var.platform_name}-compute-node"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Role"
+    value               = "compute-node"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "SysName"
+    value               = "${var.tags["SysName"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "SysOwner"
+    value               = "${var.tags["SysOwner"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Environment"
+    value               = "${var.tags["Environment"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "CostCenter"
+    value               = "${var.tags["CostCenter"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "BusinessUnit"
+    value               = "${var.tags["BusinessUnit"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Department"
+    value               = "${var.tags["Department"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Backup"
+    value               = "${var.tags["Backup"]}"
+    propagate_at_launch = true
+  }
 
   timeouts {
     delete = "15m"

@@ -52,10 +52,59 @@ resource "aws_autoscaling_group" "master" {
 
   load_balancers = ["${concat(aws_elb.master.*.name, aws_elb.master-public.*.name)}"]
 
-  tags = ["${merge(var.tags, map(
-    "Name", "${var.platform_name}-master-node",
-    "Role", "master-node"
-   ))}"]
+  tag {
+    key                 = "Name"
+    value               = "${var.platform_name}-master-node"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Role"
+    value               = "master-node"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "SysName"
+    value               = "${var.tags["SysName"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "SysOwner"
+    value               = "${var.tags["SysOwner"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Environment"
+    value               = "${var.tags["Environment"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "CostCenter"
+    value               = "${var.tags["CostCenter"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "BusinessUnit"
+    value               = "${var.tags["BusinessUnit"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Department"
+    value               = "${var.tags["Department"]}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Backup"
+    value               = "${var.tags["Backup"]}"
+    propagate_at_launch = true
+  }
 
   timeouts {
     delete = "15m"
