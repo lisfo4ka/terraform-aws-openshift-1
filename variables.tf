@@ -22,7 +22,7 @@ variable "private_subnet_ids" {
 
 variable "public_subnet_ids" {
   default = []
-  type    = "list"
+  type = "list"
 }
 
 variable "operator_cidrs" {
@@ -81,22 +81,45 @@ variable "internet_facing" {
 
 variable "gerrit_ssh_port" {
   description = "Gerrit SSH port. Update after EDP deploy"
-  default     = "31000"
+  default = "31000"
 }
 
 variable "deployer" {
   description = "Option to deploy deployer node"
-  default     = false
+  default = false
 }
 
 variable "master_public_security_group_ids" {
   type = "list"
+  default = []
 }
 
 variable "infra_public_security_group_ids" {
   type = "list"
+  default = []
 }
 
 variable "internal_security_group_ids" {
   type = "list"
+  default = []
+}
+
+variable "create_iam_profiles" {
+  description = "Flag which define wheather IAM Profiles for cluster nodes should be created or not"
+  default = false
+}
+
+variable "slave_node_iam_profile_name" {
+  description = "IAM Profile which will be assumed by slave nodes"
+  default = ""
+}
+
+variable "master_node_iam_profile_name" {
+  description = "IAM Profile which will be assumed by master nodes"
+  default = ""
+}
+
+variable "deployment_node_iam_profile_name" {
+  description = "IAM Profile which will be assumed by master nodes"
+  default = ""
 }
