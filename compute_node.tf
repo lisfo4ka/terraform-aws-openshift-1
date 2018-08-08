@@ -1,14 +1,15 @@
 resource "aws_launch_configuration" "compute_node" {
-  name_prefix   = "${var.platform_name}-compute-node-"
-  image_id      = "${var.ami_id}"
-  instance_type = "${var.compute_node_instance_type}"
-  ebs_optimized = true
+  name_prefix          = "${var.platform_name}-compute-node-"
+  image_id             = "${var.ami_id}"
+  instance_type        = "${var.compute_node_instance_type}"
+  ebs_optimized        = true
 
-  security_groups = ["${coalescelist(var.internal_security_group_ids, aws_security_group.node.*.id)}"]
+  security_groups      = [
+    "${coalescelist(var.internal_security_group_ids, aws_security_group.node.*.id)}"]
 
   key_name             = "${var.ssh_key_pair_name}"
   user_data            = "${data.template_file.node_init.rendered}"
-  iam_instance_profile = "${var.create_iam_profiles ? coalesce(var.slave_node_iam_profile_name, aws_iam_instance_profile.slave_node.name) : var.slave_node_iam_profile_name }"
+  iam_instance_profile = "${var.create_iam_profiles ? coalesce(var.slave_node_iam_profile_name, join("",aws_iam_instance_profile.slave_node.*.name)) : var.slave_node_iam_profile_name}"
   spot_price           = "${var.upstream ? var.compute_node_spot_price : ""}"
 
   lifecycle {
@@ -37,7 +38,8 @@ resource "aws_launch_configuration" "compute_node" {
 }
 
 resource "aws_autoscaling_group" "compute_node" {
-  vpc_zone_identifier       = ["${local.node_scaling_subnet_ids}"]
+  vpc_zone_identifier       = [
+    "${local.node_scaling_subnet_ids}"]
   name                      = "${var.platform_name}-compute-node"
   max_size                  = "${var.compute_node_count}"
   min_size                  = "${var.compute_node_count}"

@@ -1,4 +1,5 @@
 data "aws_iam_policy_document" "slave_node" {
+  count = "${var.create_iam_profiles ? 1 : 0}"
   statement {
     actions   = [
       "ec2:*",

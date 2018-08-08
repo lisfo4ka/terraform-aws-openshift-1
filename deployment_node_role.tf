@@ -1,5 +1,5 @@
 data "aws_iam_policy_document" "deployment" {
-  count = "${var.deployer}"
+  count = "${var.create_iam_profiles && var.deployer ? 1 : 0 }"
 
   statement {
     actions   = [
