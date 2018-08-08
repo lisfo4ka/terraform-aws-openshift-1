@@ -8,7 +8,7 @@ resource "aws_launch_configuration" "compute_node" {
 
   key_name             = "${var.ssh_key_pair_name}"
   user_data            = "${data.template_file.node_init.rendered}"
-  iam_instance_profile = "${var.create_iam_profiles ? coalesce(aws_iam_instance_profile.slave_node.name, var.slave_node_iam_profile_name) : var.slave_node_iam_profile_name}"
+  iam_instance_profile = "${var.create_iam_profiles ? coalesce(var.slave_node_iam_profile_name, aws_iam_instance_profile.slave_node.name) : var.slave_node_iam_profile_name }"
   spot_price           = "${var.upstream ? var.compute_node_spot_price : ""}"
 
   lifecycle {
