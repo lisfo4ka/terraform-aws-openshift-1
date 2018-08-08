@@ -120,6 +120,6 @@ variable "master_node_iam_profile_name" {
 }
 
 variable "deployment_node_iam_profile_name" {
-  description = "IAM Profile which will be assumed by master nodes"
+  description = "IAM Profile which will be assumed by deployment nodes"
   default = ""
 }

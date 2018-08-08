@@ -8,7 +8,7 @@ resource "aws_launch_configuration" "master" {
 
   key_name             = "${var.ssh_key_pair_name}"
   user_data            = "${data.template_file.master_node_init.rendered}"
-  iam_instance_profile = "${var.create_iam_profiles ? collease(aws_iam_instance_profile.master.name, var.master_node_iam_profile_name) : var.master_node_iam_profile_name}"
+  iam_instance_profile = "${var.create_iam_profiles ? coalesce(aws_iam_instance_profile.master.name, var.master_node_iam_profile_name) : var.master_node_iam_profile_name}"
   spot_price           = "${var.upstream ? var.master_spot_price : ""}"
 
   lifecycle {

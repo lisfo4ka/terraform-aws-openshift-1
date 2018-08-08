@@ -28,7 +28,7 @@ resource "aws_instance" "deployment" {
     "${coalescelist(var.internal_security_group_ids, aws_security_group.node.*.id)}"
   ]
 
-  iam_instance_profile = "${var.create_iam_profiles ? collease(aws_iam_instance_profile.deployment.name, var.deployment_node_iam_profile_name) : var.deployment_node_iam_profile_name}"
+  iam_instance_profile = "${var.create_iam_profiles ? coalesce(aws_iam_instance_profile.deployment.name, var.deployment_node_iam_profile_name) : var.deployment_node_iam_profile_name}"
 
   user_data = "${data.template_file.deployment_init.rendered}"
 
