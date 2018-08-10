@@ -1,6 +1,6 @@
 data "template_file" "deployment_init" {
-  count    = "${var.deployer}"
-  template = "${(var.upstream) ? file("${path.module}/resources/origin-deployment-init.yml") : file("${path.module}/resources/deployment-init.yml")}"
+  count    = "${var.need_deployment_node}"
+  template = "${file("${path.module}/resources/origin-deployment-init.yml")}"
 
   vars {
     rhn_username            = "${var.rhn_username}"
@@ -12,20 +12,19 @@ data "template_file" "deployment_init" {
 }
 
 locals {
-  deployment_ssh_user = "${(var.upstream) ? "centos" : "ec2-user"}"
+  deployment_ssh_user = "${var.user_name}"
 }
 
 resource "aws_instance" "deployment" {
-  count                       = "${var.deployer}"
+  count                       = "${var.need_deployment_node}"
   ami                         = "${var.ami_id}"
   instance_type               = "t2.small"
-  subnet_id                   = "${var.public_subnet_ids[0]}"
-  associate_public_ip_address = true
+  subnet_id                   = "${var.private_subnet_ids[0]}"
+  associate_public_ip_address = false
   key_name                    = "${var.ssh_key_pair_name}"
 
   vpc_security_group_ids = [
-    "${coalescelist(var.infra_public_security_group_ids, aws_security_group.deployment.*.id)}",
-    "${coalescelist(var.internal_security_group_ids, aws_security_group.node.*.id)}"
+    "${coalescelist(var.cluster_internal_security_group_ids, concat(aws_security_group.deployment.*.id, aws_security_group.node.*.id))}",
   ]
 
   iam_instance_profile = "${var.create_iam_profiles ? coalesce(var.slave_node_iam_profile_name, join("",aws_iam_instance_profile.slave_node.*.name)) : var.deployment_node_iam_profile_name}"

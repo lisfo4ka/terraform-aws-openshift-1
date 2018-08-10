@@ -3,7 +3,7 @@ resource "aws_elb" "master" {
   internal = true
   subnets  = ["${var.private_subnet_ids}"]
 
-  security_groups = ["${coalescelist(var.internal_security_group_ids, aws_security_group.node.*.id)}"]
+  security_groups = ["${coalescelist(var.cluster_internal_security_group_ids, aws_security_group.node.*.id)}"]
 
   access_logs {
     bucket        = "${aws_s3_bucket.elb_logs.bucket}"

@@ -21,16 +21,17 @@ variable "private_subnet_ids" {
 }
 
 variable "public_subnet_ids" {
-  default = []
   type = "list"
 }
 
 variable "operator_cidrs" {
-  type = "list"
+  type    = "list"
+  default = []
 }
 
 variable "public_access_cidrs" {
-  type = "list"
+  type    = "list"
+  default = []
 }
 
 variable "ami_id" {
@@ -40,8 +41,6 @@ variable "ami_id" {
 variable "user_name" {
   type = "string"
 }
-
-variable "upstream" {}
 
 variable "rhn_username" {}
 variable "rhn_password" {}
@@ -81,45 +80,45 @@ variable "internet_facing" {
 
 variable "gerrit_ssh_port" {
   description = "Gerrit SSH port. Update after EDP deploy"
-  default = "31000"
+  default     = "31000"
 }
 
-variable "deployer" {
-  description = "Option to deploy deployer node"
-  default = false
+variable "need_deployment_node" {
+  description = "Boolean variable which defines whether a deployment node will be deployed or not"
+  default     = false
 }
 
 variable "master_public_security_group_ids" {
-  type = "list"
+  type    = "list"
   default = []
 }
 
 variable "infra_public_security_group_ids" {
-  type = "list"
+  type    = "list"
   default = []
 }
 
-variable "internal_security_group_ids" {
-  type = "list"
+variable "cluster_internal_security_group_ids" {
+  type    = "list"
   default = []
 }
 
 variable "create_iam_profiles" {
   description = "Flag which define wheather IAM Profiles for cluster nodes should be created or not"
-  default = false
+  default     = false
 }
 
 variable "slave_node_iam_profile_name" {
   description = "IAM Profile which will be assumed by slave nodes"
-  default = ""
+  default     = ""
 }
 
 variable "master_node_iam_profile_name" {
   description = "IAM Profile which will be assumed by master nodes"
-  default = ""
+  default     = ""
 }
 
 variable "deployment_node_iam_profile_name" {
   description = "IAM Profile which will be assumed by deployment nodes"
-  default = ""
+  default     = ""
 }

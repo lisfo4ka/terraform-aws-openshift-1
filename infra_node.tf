@@ -4,12 +4,12 @@ resource "aws_launch_configuration" "infra_node" {
   instance_type = "${var.infra_node_instance_type}"
   ebs_optimized = true
 
-  security_groups = ["${coalescelist(var.internal_security_group_ids, aws_security_group.node.*.id)}"]
+  security_groups = ["${coalescelist(var.cluster_internal_security_group_ids, aws_security_group.node.*.id)}"]
 
   key_name             = "${var.ssh_key_pair_name}"
   user_data            = "${data.template_file.node_init.rendered}"
   iam_instance_profile = "${var.create_iam_profiles ? coalesce(var.slave_node_iam_profile_name, join("",aws_iam_instance_profile.slave_node.*.name)) : var.slave_node_iam_profile_name}"
-  spot_price           = "${var.upstream ? var.infra_node_spot_price : ""}"
+  spot_price           = "${var.infra_node_spot_price}"
 
   lifecycle {
     create_before_destroy = true
@@ -47,6 +47,9 @@ resource "aws_autoscaling_group" "infra_node" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.infra_node.name}"
 
+  # FIXME (will not work with internal deployment)
+  target_group_arns = ["${aws_lb_target_group.infra_alb.arn}"]
+
   load_balancers = ["${aws_elb.infra.name}"]
 
   tag {
@@ -56,8 +59,20 @@ resource "aws_autoscaling_group" "infra_node" {
   }
 
   tag {
-    key                 = "Role"
-    value               = "infra-node"
+    key                 = "cluster_role"
+    value               = "router"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "KubernetesCluster"
+    value               = "${var.platform_name}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "kubernetes.io/cluster/${var.platform_name}"
+    value               = "${var.platform_name}"
     propagate_at_launch = true
   }
 

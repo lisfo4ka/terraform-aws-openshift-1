@@ -1,7 +1,8 @@
 data "aws_iam_policy_document" "slave_node" {
   count = "${var.create_iam_profiles ? 1 : 0}"
+
   statement {
-    actions   = [
+    actions = [
       "ec2:*",
       "ec2:AttachVolume",
       "ssm:GetDocument",
@@ -9,9 +10,11 @@ data "aws_iam_policy_document" "slave_node" {
       "elasticloadbalancing:*",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
+
     resources = [
-      "*"]
+      "*",
+    ]
   }
 }
 

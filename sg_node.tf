@@ -1,7 +1,7 @@
 resource "aws_security_group" "node" {
-  count         = "${length(var.internal_security_group_ids) != 0 ? 0 : 1}"
-  name          = "${var.platform_name}-node"
-  description   = "Cluster node group for ${var.platform_name}"
+  count       = "${length(var.cluster_internal_security_group_ids) != 0 ? 0 : 1}"
+  name        = "${var.platform_name}-node"
+  description = "Cluster node group for ${var.platform_name}"
 
   ingress {
     from_port   = 22
@@ -24,7 +24,10 @@ resource "aws_security_group" "node" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-node"))}"
+  tags = "${merge(var.tags, map(
+    "Name", "${var.platform_name}-node",
+    "KubernetesCluster", "${var.platform_name}"
+  ))}"
 
   vpc_id = "${var.platform_vpc_id}"
 }

@@ -1,7 +1,8 @@
 data "aws_iam_policy_document" "master" {
   count = "${var.create_iam_profiles ? 1 : 0}"
+
   statement {
-    actions   = [
+    actions = [
       "ec2:*",
       "ec2:AttachVolume",
       "ssm:GetDocument",
@@ -21,9 +22,11 @@ data "aws_iam_policy_document" "master" {
       "cloudwatch:GetMetricStatistics",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
+
     resources = [
-      "*"]
+      "*",
+    ]
   }
 }
 
@@ -41,7 +44,7 @@ resource "aws_iam_role_policy" "master" {
 }
 
 resource "aws_iam_instance_profile" "master" {
-  count = "${var.master_node_iam_profile_name != "" ? 1 : 0}"
+  count = "${var.create_iam_profiles ? 1 : 0}"
   name  = "${var.platform_name}-master-profile"
   role  = "${aws_iam_role.master.name}"
 }

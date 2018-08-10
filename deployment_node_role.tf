@@ -1,8 +1,8 @@
 data "aws_iam_policy_document" "deployment" {
-  count = "${var.create_iam_profiles && var.deployer ? 1 : 0 }"
+  count = "${var.create_iam_profiles && var.need_deployment_node ? 1 : 0 }"
 
   statement {
-    actions   = [
+    actions = [
       "ssm:DescribeAssociation",
       "ssm:GetDeployablePatchSnapshotForInstance",
       "ssm:GetDocument",
@@ -18,13 +18,15 @@ data "aws_iam_policy_document" "deployment" {
       "ssm:UpdateInstanceInformation",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
+
     resources = [
-      "*"]
+      "*",
+    ]
   }
 
   statement {
-    actions   = [
+    actions = [
       "ec2messages:AcknowledgeMessage",
       "ec2messages:DeleteMessage",
       "ec2messages:FailMessage",
@@ -33,44 +35,52 @@ data "aws_iam_policy_document" "deployment" {
       "ec2messages:SendReply",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
+
     resources = [
-      "*"]
+      "*",
+    ]
   }
 
   statement {
-    actions   = [
+    actions = [
       "cloudwatch:PutMetricData",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
+
     resources = [
-      "*"]
+      "*",
+    ]
   }
 
   statement {
-    actions   = [
+    actions = [
       "ec2:Describe*",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
+
     resources = [
-      "*"]
+      "*",
+    ]
   }
 
   statement {
-    actions   = [
+    actions = [
       "ds:CreateComputer",
       "ds:DescribeDirectories",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
+
     resources = [
-      "*"]
+      "*",
+    ]
   }
 
   statement {
-    actions   = [
+    actions = [
       "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:DescribeLogGroups",
@@ -78,13 +88,15 @@ data "aws_iam_policy_document" "deployment" {
       "logs:PutLogEvents",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
+
     resources = [
-      "*"]
+      "*",
+    ]
   }
 
   statement {
-    actions   = [
+    actions = [
       "s3:PutObject",
       "s3:GetObject",
       "s3:AbortMultipartUpload",
@@ -93,27 +105,29 @@ data "aws_iam_policy_document" "deployment" {
       "s3:ListBucketMultipartUploads",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
+
     resources = [
-      "*"]
+      "*",
+    ]
   }
 }
 
 resource "aws_iam_role" "deployment" {
-  count              = "${var.create_iam_profiles && var.deployer ? 1 : 0 }"
+  count              = "${var.create_iam_profiles && var.need_deployment_node ? 1 : 0 }"
   name               = "${var.platform_name}-deployment-role"
   assume_role_policy = "${data.aws_iam_policy_document.ec2.json}"
 }
 
 resource "aws_iam_role_policy" "deployment" {
-  count  = "${var.create_iam_profiles && var.deployer ? 1 : 0 }"
+  count  = "${var.create_iam_profiles && var.need_deployment_node ? 1 : 0 }"
   name   = "${var.platform_name}-deployment-policy"
   role   = "${aws_iam_role.deployment.id}"
   policy = "${data.aws_iam_policy_document.deployment.json}"
 }
 
 resource "aws_iam_instance_profile" "deployment" {
-  count = "${var.create_iam_profiles && var.deployer ? 1 : 0 }"
+  count = "${var.create_iam_profiles && var.need_deployment_node ? 1 : 0 }"
   name  = "${var.platform_name}-deployment-profile"
   role  = "${aws_iam_role.deployment.name}"
 }

@@ -4,11 +4,14 @@ data "template_file" "inventory" {
   template = "${file("${path.module}/resources/inventory.template.cfg")}"
 
   vars {
-    platform_internal_subdomain = "${var.platform_internal_subdomain}"
-    master_default_subdomain    = "${var.internet_facing == "external" ? format("%s.%s", var.platform_name, var.platform_external_subdomain) : var.platform_internal_subdomain}"
+    platform_internal_subdomain       = "${var.platform_internal_subdomain}"
+    master_default_internal_subdomain = "${var.platform_name}.${var.platform_internal_subdomain}"
+    master_default_subdomain          = "${var.internet_facing == "external" ? format("%s.%s", var.platform_name, var.platform_external_subdomain) : format("%s.%s", var.platform_name, var.platform_internal_subdomain)}"
 
-    cluster_id = "${var.platform_name}"
-    user_name  = "${var.user_name}"
+    cluster_id                          = "${var.platform_name}"
+    user_name                           = "${var.user_name}"
+    openshift_major_version             = "${var.openshift_major_version}"
+    openshift_master_identity_providers = "[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'${var.openshift_major_version >= 3.10 ? "" : ", 'filename': '/etc/origin/master/htpasswd'"}}]"
   }
 }
 

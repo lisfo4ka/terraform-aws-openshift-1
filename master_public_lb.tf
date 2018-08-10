@@ -6,7 +6,9 @@ resource "aws_lb" "master-alb" {
   load_balancer_type               = "application"
   enable_cross_zone_load_balancing = true
 
-  security_groups = ["${coalescelist(var.master_public_security_group_ids, aws_security_group.master_public.*.id)}"]
+  security_groups = [
+    "${coalescelist(concat(var.cluster_internal_security_group_ids, var.master_public_security_group_ids), concat(aws_security_group.master_public.*.id, aws_security_group.node.*.id))}",
+  ]
 
   tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-alb"))}"
 }

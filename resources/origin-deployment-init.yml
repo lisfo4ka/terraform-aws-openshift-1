@@ -8,9 +8,8 @@ runcmd:
  - yum update
  - yum -y install --enablerepo=epel python-pip python-wheel
  - pip install --upgrade pip
- - pip install -Iv ansible==2.4.2.0 boto
+ - pip install -Iv ansible==2.4.3.0 boto
  - mkdir -p /usr/share/ansible/openshift-ansible
  - git clone -b release-${openshift_major_version} https://github.com/openshift/openshift-ansible /usr/share/ansible/openshift-ansible
  - wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py -O /usr/share/ansible/openshift-ansible/ec2.py
  - chmod +x /usr/share/ansible/openshift-ansible/ec2.py
- 
