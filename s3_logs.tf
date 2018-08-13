@@ -1,7 +1,9 @@
 data "aws_elb_service_account" "main" {}
 
+data "aws_caller_identity" "current" {}
+
 resource "aws_s3_bucket" "elb_logs" {
-  bucket        = "${var.platform_name}-elb-logs"
+  bucket        = "${var.platform_name}-elb-logs-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = true
 
