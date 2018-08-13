@@ -28,5 +28,5 @@ resource "aws_s3_bucket" "elb_logs" {
 }
 POLICY
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-elb-logs"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-elb-logs-${data.aws_caller_identity.current.account_id}"))}"
 }
