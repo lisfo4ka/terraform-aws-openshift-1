@@ -16,7 +16,7 @@ resource "aws_lb" "master-alb" {
 resource "aws_lb_listener" "master_secure" {
   count             = "${var.internet_facing == "external" ? 1 : 0 }"
   load_balancer_arn = "${aws_lb.master-alb.arn}"
-  port              = "8443"
+  port              = "${var.master_public_lb_port}"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = "${aws_acm_certificate_validation.openshift-cluster.certificate_arn}"

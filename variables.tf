@@ -52,6 +52,10 @@ variable "master_spot_price" {}
 
 variable "master_instance_type" {}
 
+variable "master_public_lb_port" {
+  default = "8443"
+}
+
 variable "compute_node_count" {}
 
 variable "compute_node_spot_price" {}
