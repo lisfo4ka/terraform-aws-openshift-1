@@ -46,6 +46,7 @@ resource "aws_autoscaling_group" "master" {
   health_check_grace_period = 300
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.master.name}"
+  suspended_processes       = ["${var.master_asg_suspended_processes}"]
 
   # FIXME (will not work with internal deployment)
   target_group_arns = ["${aws_lb_target_group.master_secure.arn}"]

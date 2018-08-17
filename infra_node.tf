@@ -46,6 +46,7 @@ resource "aws_autoscaling_group" "infra_node" {
   health_check_grace_period = 300
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.infra_node.name}"
+  suspended_processes       = ["${var.infra_asg_suspended_processes}"]
 
   # FIXME (will not work with internal deployment)
   target_group_arns = ["${aws_lb_target_group.infra_alb.arn}"]

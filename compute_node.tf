@@ -49,6 +49,7 @@ resource "aws_autoscaling_group" "compute_node" {
   health_check_grace_period = 300
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.compute_node.name}"
+  suspended_processes       = ["${var.compute_asg_suspended_processes}"]
 
   tag {
     key                 = "Name"

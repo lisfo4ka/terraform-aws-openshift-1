@@ -48,6 +48,11 @@ variable "rh_subscription_pool_id" {}
 
 variable "master_count" {}
 
+variable "master_asg_suspended_processes" {
+  type    = "list"
+  default = []
+}
+
 variable "master_spot_price" {}
 
 variable "master_instance_type" {}
@@ -58,11 +63,21 @@ variable "master_public_lb_port" {
 
 variable "compute_node_count" {}
 
+variable "compute_asg_suspended_processes" {
+  type    = "list"
+  default = []
+}
+
 variable "compute_node_spot_price" {}
 
 variable "compute_node_instance_type" {}
 
 variable "infra_node_count" {}
+
+variable "infra_asg_suspended_processes" {
+  type    = "list"
+  default = []
+}
 
 variable "infra_node_spot_price" {}
 
