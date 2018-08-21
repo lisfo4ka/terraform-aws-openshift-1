@@ -141,3 +141,7 @@ variable "deployment_node_iam_profile_name" {
   description = "IAM Profile which will be assumed by deployment nodes"
   default     = ""
 }
+
+variable "deploy_efs" {
+  description = "Boolean variable that defines wheather EFS storage will be deployed or not"
+}
