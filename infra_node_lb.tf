@@ -20,7 +20,7 @@ resource "aws_elb" "infra" {
     instance_protocol  = "https"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "${aws_acm_certificate_validation.openshift-cluster.certificate_arn}"
+    ssl_certificate_id = "${coalesce(var.certificate_arn, join("",aws_acm_certificate_validation.openshift-cluster.*.certificate_arn))}"
   }
 
   listener {
@@ -71,7 +71,7 @@ resource "aws_lb_listener" "infra_alb" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "${aws_acm_certificate_validation.openshift-cluster.certificate_arn}"
+  certificate_arn   = "${coalesce(var.certificate_arn, join("",aws_acm_certificate_validation.openshift-cluster.*.certificate_arn))}"
 
   default_action {
     target_group_arn = "${aws_lb_target_group.infra_alb.arn}"

@@ -5,7 +5,7 @@ data "aws_route53_zone" "wildcard_zone" {
 }
 
 resource "aws_acm_certificate" "openshift-cluster" {
-  count       = "${var.internet_facing == "external" ? 1 : 0 }"
+  count       = "${var.certificate_arn == "" && var.internet_facing == "external" ? 1 : 0 }"
   domain_name = "${var.platform_external_subdomain}"
 
   subject_alternative_names = [
@@ -18,7 +18,7 @@ resource "aws_acm_certificate" "openshift-cluster" {
 }
 
 resource "aws_route53_record" "openshift-cluster_cert-verification" {
-  count   = "${var.internet_facing == "external" ? 3 : 0 }"
+  count   = "${var.certificate_arn == "" && var.internet_facing == "external" ? 3 : 0 }"
   name    = "${lookup(aws_acm_certificate.openshift-cluster.domain_validation_options[count.index], "resource_record_name")}"
   type    = "${lookup(aws_acm_certificate.openshift-cluster.domain_validation_options[count.index], "resource_record_type")}"
   zone_id = "${data.aws_route53_zone.wildcard_zone.zone_id}"
@@ -27,7 +27,7 @@ resource "aws_route53_record" "openshift-cluster_cert-verification" {
 }
 
 resource "aws_acm_certificate_validation" "openshift-cluster" {
-  count           = "${var.internet_facing == "external" ? 1 : 0 }"
+  count           = "${var.certificate_arn == "" && var.internet_facing == "external" ? 1 : 0 }"
   certificate_arn = "${aws_acm_certificate.openshift-cluster.arn}"
 
   validation_record_fqdns = [

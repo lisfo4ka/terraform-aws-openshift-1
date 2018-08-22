@@ -145,3 +145,8 @@ variable "deployment_node_iam_profile_name" {
 variable "deploy_efs" {
   description = "Boolean variable that defines wheather EFS storage will be deployed or not"
 }
+
+variable certificate_arn {
+  description = "The ARN of the existing SSL certificate"
+  default     = ""
+}

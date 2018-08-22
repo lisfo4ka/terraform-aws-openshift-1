@@ -19,7 +19,7 @@ resource "aws_lb_listener" "master_secure" {
   port              = "${var.master_public_lb_port}"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "${aws_acm_certificate_validation.openshift-cluster.certificate_arn}"
+  certificate_arn   = "${coalesce(var.certificate_arn, join("",aws_acm_certificate_validation.openshift-cluster.*.certificate_arn))}"
 
   default_action {
     target_group_arn = "${aws_lb_target_group.master_secure.arn}"
