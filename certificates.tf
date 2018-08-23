@@ -9,7 +9,6 @@ resource "aws_acm_certificate" "openshift-cluster" {
   domain_name = "${var.platform_external_subdomain}"
 
   subject_alternative_names = [
-    "master.${var.platform_name}.${var.platform_external_subdomain}",
     "*.${var.platform_name}.${var.platform_external_subdomain}",
     "${var.platform_name}.${var.platform_external_subdomain}",
   ]
