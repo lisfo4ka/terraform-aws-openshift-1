@@ -24,7 +24,7 @@ resource "aws_launch_configuration" "infra_node" {
   # docker volume
   ebs_block_device {
     device_name = "/dev/sdf"
-    volume_size = 80
+    volume_size = 50
     volume_type = "gp2"
   }
 
