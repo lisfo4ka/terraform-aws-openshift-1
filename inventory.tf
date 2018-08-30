@@ -8,8 +8,8 @@ data "template_file" "inventory" {
     master_default_internal_subdomain = "${var.platform_name}.${var.platform_internal_subdomain}"
     master_default_subdomain          = "${var.internet_facing == "external" ? format("%s.%s", var.platform_name, var.platform_external_subdomain) : format("%s.%s", var.platform_name, var.platform_internal_subdomain)}"
 
-    efs_fsid     = "${aws_efs_file_system.persistent_volumes.id}"
-    aws_region   = "${var.region}"
+    efs_fsid   = "${aws_efs_file_system.persistent_volumes.id}"
+    aws_region = "${var.region}"
 
     cluster_id                          = "${var.platform_name}"
     user_name                           = "${var.user_name}"

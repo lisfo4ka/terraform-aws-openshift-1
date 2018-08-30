@@ -4,7 +4,7 @@ resource "aws_elb" "infra" {
   subnets  = ["${split(",", var.internet_facing == "external" ? join(",", var.public_subnet_ids) : join(",", var.private_subnet_ids))}"]
 
   security_groups = [
-    "${coalescelist(concat(var.cluster_internal_security_group_ids, var.infra_public_security_group_ids), concat(aws_security_group.platform_public.*.id, aws_security_group.node.*.id))}",
+    "${coalescelist(concat(var.infra_public_security_group_ids), concat(aws_security_group.platform_public.*.id, aws_security_group.node.*.id))}",
   ]
 
   access_logs {
@@ -15,26 +15,14 @@ resource "aws_elb" "infra" {
 
   tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-internal"))}"
 
+  listener = ["${var.infra_lb_listeners}"]
+
   listener {
     instance_port      = 443
     instance_protocol  = "https"
     lb_port            = 443
     lb_protocol        = "https"
     ssl_certificate_id = "${coalesce(var.certificate_arn, join("",aws_acm_certificate_validation.openshift-cluster.*.certificate_arn))}"
-  }
-
-  listener {
-    instance_port     = 80
-    instance_protocol = "http"
-    lb_port           = 80
-    lb_protocol       = "http"
-  }
-
-  listener {
-    instance_port     = "${var.gerrit_ssh_port}"
-    instance_protocol = "tcp"
-    lb_port           = "${var.gerrit_ssh_port}"
-    lb_protocol       = "tcp"
   }
 
   health_check {
@@ -54,7 +42,7 @@ resource "aws_lb" "infra_alb" {
   enable_cross_zone_load_balancing = true
 
   security_groups = [
-    "${coalescelist(concat(var.cluster_internal_security_group_ids, var.infra_public_security_group_ids), concat(aws_security_group.platform_public.*.id, aws_security_group.node.*.id))}",
+    "${coalescelist(concat(var.infra_public_security_group_ids), concat(aws_security_group.platform_public.*.id, aws_security_group.node.*.id))}",
   ]
 
   access_logs {

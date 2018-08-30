@@ -97,11 +97,6 @@ variable "internet_facing" {
   description = "Define if ELBs for master and infra nodes are internet-facing (exteral or internal)"
 }
 
-variable "gerrit_ssh_port" {
-  description = "Gerrit SSH port. Update after EDP deploy"
-  default     = "31000"
-}
-
 variable "need_deployment_node" {
   description = "Boolean variable which defines whether a deployment node will be deployed or not"
   default     = false
@@ -149,4 +144,9 @@ variable "deploy_efs" {
 variable certificate_arn {
   description = "The ARN of the existing SSL certificate"
   default     = ""
+}
+
+variable infra_lb_listeners {
+  type        = "list"
+  description = "List of maps for using as listners foc Classic LB"
 }

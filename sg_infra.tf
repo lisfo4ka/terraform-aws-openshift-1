@@ -17,8 +17,8 @@ resource "aws_security_group" "platform_public" {
   }
 
   ingress {
-    from_port   = "${var.gerrit_ssh_port}"
-    to_port     = "${var.gerrit_ssh_port}"
+    from_port   = "30000"
+    to_port     = "32767"
     protocol    = "tcp"
     cidr_blocks = ["${var.public_access_cidrs}"]
   }
