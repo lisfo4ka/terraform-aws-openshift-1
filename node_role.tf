@@ -18,6 +18,11 @@ data "aws_iam_policy_document" "slave_node" {
   }
 }
 
+data "aws_iam_instance_profile" "existing_slave_node" {
+  count = "${var.create_iam_profiles ? 0 : 1}"
+  name  = "${var.slave_node_iam_profile_name}"
+}
+
 resource "aws_iam_role" "slave_node" {
   count              = "${var.create_iam_profiles ? 1 : 0}"
   name               = "${var.platform_name}-compute-node-role"

@@ -14,6 +14,8 @@ data "template_file" "inventory" {
     cluster_id                          = "${var.platform_name}"
     user_name                           = "${var.user_name}"
     openshift_major_version             = "${var.openshift_major_version}"
+    openshift_registry_s3_bucket_name   = "${aws_s3_bucket.openshift_registry_storage.bucket}"
+    openshift_registry_root_directory   = "${local.openshift_registry_root_directory}"
     openshift_master_identity_providers = "[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'${var.openshift_major_version != "3.9" ? "" : ", 'filename': '/etc/origin/master/htpasswd'"}}]"
   }
 }

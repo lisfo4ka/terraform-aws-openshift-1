@@ -1,3 +1,8 @@
+locals {
+  openshift_registry_s3_bucket_name = "openshift-registry"
+  openshift_registry_root_directory = "/"
+}
+
 variable "region" {
   type = "string"
 }
