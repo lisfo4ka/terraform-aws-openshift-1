@@ -2,7 +2,7 @@ resource "aws_efs_file_system" "persistent_volumes" {
   count          = "${var.deploy_efs ? 1 : 0}"
   creation_token = "${var.platform_name}"
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-efs"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-efs", "user:tag", "EDP-shared-${var.platform_name}"))}"
 }
 
 data "aws_availability_zones" "az" {}

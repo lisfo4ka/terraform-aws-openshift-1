@@ -11,7 +11,7 @@ resource "aws_elb" "master" {
     interval      = 5
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-internal"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-internal", "user:tag", "EDP-shared-${var.platform_name}"))}"
 
   listener {
     instance_port     = 8443

@@ -13,7 +13,7 @@ resource "aws_elb" "infra" {
     interval      = 5
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-internal"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-internal", "user:tag", "EDP-shared-${var.platform_name}"))}"
 
   listener = ["${var.infra_lb_listeners}"]
 
@@ -51,7 +51,7 @@ resource "aws_lb" "infra_alb" {
     enabled = true
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-alb-${var.internet_facing}"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-infra-alb-${var.internet_facing}", "user:tag", "EDP-shared-${var.platform_name}"))}"
 }
 
 resource "aws_lb_listener" "infra_alb" {
@@ -73,7 +73,7 @@ resource "aws_lb_target_group" "infra_alb" {
   protocol             = "HTTPS"
   deregistration_delay = 20
   vpc_id               = "${var.platform_vpc_id}"
-  tags                 = "${merge(var.tags, map("Name", "${var.platform_name}-infra-alb-${var.internet_facing}"))}"
+  tags                 = "${merge(var.tags, map("Name", "${var.platform_name}-infra-alb-${var.internet_facing}", "user:tag", "EDP-shared-${var.platform_name}"))}"
 
   stickiness = {
     type = "lb_cookie"

@@ -28,7 +28,7 @@ resource "aws_s3_bucket" "elb_logs" {
 }
 POLICY
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-elb-logs-${data.aws_caller_identity.current.account_id}"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-elb-logs-${data.aws_caller_identity.current.account_id}", "user:tag", "EDP-shared-${var.platform_name}"))}"
 }
 
 resource "aws_s3_bucket" "openshift_registry_storage" {
@@ -94,5 +94,5 @@ POLICY
     }
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-${local.openshift_registry_s3_bucket_name}-${data.aws_caller_identity.current.account_id}"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-${local.openshift_registry_s3_bucket_name}-${data.aws_caller_identity.current.account_id}", "user:tag", "EDP-shared-${var.platform_name}"))}"
 }

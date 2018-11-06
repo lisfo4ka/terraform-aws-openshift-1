@@ -33,6 +33,7 @@ resource "aws_instance" "deployment" {
 
   tags = "${merge(var.tags, map(
     "Name", "${var.platform_name}-deployment",
-    "Role", "deployment-node"
+    "Role", "deployment-node",
+    "user:tag", "EDP-shared-${var.platform_name}"
     ))}"
 }

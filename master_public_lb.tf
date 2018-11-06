@@ -10,7 +10,7 @@ resource "aws_lb" "master-alb" {
     "${coalescelist(concat(var.master_public_security_group_ids), concat(aws_security_group.master_public.*.id, aws_security_group.node.*.id))}",
   ]
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-alb"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-alb", "user:tag", "EDP-shared-${var.platform_name}"))}"
 }
 
 resource "aws_lb_listener" "master_secure" {
@@ -34,7 +34,7 @@ resource "aws_lb_target_group" "master_secure" {
   protocol             = "HTTPS"
   deregistration_delay = 20
   vpc_id               = "${var.platform_vpc_id}"
-  tags                 = "${merge(var.tags, map("Name", "${var.platform_name}-master-secure"))}"
+  tags                 = "${merge(var.tags, map("Name", "${var.platform_name}-master-secure", "user:tag", "EDP-shared-${var.platform_name}"))}"
 
   stickiness = {
     type = "lb_cookie"
@@ -56,7 +56,7 @@ resource "aws_elb" "master-public" {
     interval      = 5
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-external"))}"
+  tags = "${merge(var.tags, map("Name", "${var.platform_name}-master-external", "user:tag", "EDP-shared-${var.platform_name}"))}"
 
   listener {
     instance_port     = 8443
