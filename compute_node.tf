@@ -1,7 +1,8 @@
 resource "aws_launch_configuration" "compute_node" {
+  count         = "${length(var.compute_nodes)}"
   name_prefix   = "${var.platform_name}-compute-node-"
   image_id      = "${var.ami_id}"
-  instance_type = "${var.compute_node_instance_type}"
+  instance_type = "${lookup(var.compute_nodes[count.index], "instance_type")}"
   ebs_optimized = true
 
   security_groups = ["${coalescelist(var.cluster_internal_security_group_ids, aws_security_group.node.*.id)}"]
@@ -37,19 +38,21 @@ resource "aws_launch_configuration" "compute_node" {
 }
 
 resource "aws_autoscaling_group" "compute_node" {
+  count = "${length(var.compute_nodes)}"
+
   vpc_zone_identifier = [
-    "${local.node_scaling_subnet_ids}",
+    "${slice(var.private_subnet_ids, 0, lookup(var.compute_nodes[count.index], "node_count") < length(var.private_subnet_ids) ? lookup(var.compute_nodes[count.index], "node_count") : length(var.private_subnet_ids))}"
   ]
 
-  name                      = "${var.platform_name}-compute-node"
-  max_size                  = "${var.compute_node_count}"
-  min_size                  = "${var.compute_node_count}"
-  desired_capacity          = "${var.compute_node_count}"
+  name                      = "${var.platform_name}-compute-node-${lookup(var.compute_nodes[count.index], "instance_type")}"
+  max_size                  = "${lookup(var.compute_nodes[count.index], "node_count")}"
+  min_size                  = "${lookup(var.compute_nodes[count.index], "node_count")}"
+  desired_capacity          = "${lookup(var.compute_nodes[count.index], "node_count")}"
   health_check_type         = "EC2"
   health_check_grace_period = 300
   force_delete              = true
-  launch_configuration      = "${aws_launch_configuration.compute_node.name}"
-  suspended_processes       = ["${var.compute_asg_suspended_processes}"]
+  launch_configuration      = "${element(aws_launch_configuration.compute_node.*.name, count.index)}"
+  suspended_processes       = ["${var.asg_suspended_processes}"]
 
   tag {
     key                 = "Name"
