@@ -19,6 +19,11 @@ write_files:
         CONTAINER_ROOT_LV_NAME="dockerlv"
         CONTAINER_ROOT_LV_MOUNT_PATH="/var/lib/docker"
         CONTAINER_ROOT_LV_SIZE=100%FREE
+  - path: /tmp/cw-agent-conf.json
+    permissions: 0644
+    owner: root
+    encoding: base64
+    content: ${base64encode(cw_agent_conf)}
 
 package_update: true
 package_upgrade: true
@@ -75,4 +80,6 @@ runcmd:
   - yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
   - sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
   - yum -y --enablerepo=epel install htop
+  - yum -y install https://s3.amazonaws.com/amazoncloudwatch-agent/centos/amd64/latest/amazon-cloudwatch-agent.rpm
+  - /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/tmp/cw-agent-conf.json -s
   - echo Defaults:centos \!requiretty >> /etc/sudoers

@@ -5,6 +5,7 @@ data "template_file" "node_init" {
     rhn_username            = "${var.rhn_username}"
     rhn_password            = "${var.rhn_password}"
     rh_subscription_pool_id = "${var.rh_subscription_pool_id}"
+    cw_agent_conf           = "${file("${path.module}/resources/cw-agent-conf.json")}"
   }
 }
 
@@ -16,5 +17,6 @@ data "template_file" "master_node_init" {
     rhn_username            = "${var.rhn_username}"
     rhn_password            = "${var.rhn_password}"
     rh_subscription_pool_id = "${var.rh_subscription_pool_id}"
+    cw_agent_conf           = "${file("${path.module}/resources/cw-agent-conf.json")}"
   }
 }
