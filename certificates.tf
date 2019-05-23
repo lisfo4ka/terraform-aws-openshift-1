@@ -32,4 +32,8 @@ resource "aws_acm_certificate_validation" "openshift-cluster" {
   validation_record_fqdns = [
     "${aws_route53_record.openshift-cluster_cert-verification.*.fqdn}",
   ]
+
+  timeouts {
+    create = "2h"
+  }
 }
