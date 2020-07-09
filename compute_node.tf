@@ -41,7 +41,7 @@ resource "aws_autoscaling_group" "compute_node" {
   count = "${length(var.compute_nodes)}"
 
   vpc_zone_identifier = [
-    "${slice(var.private_subnet_ids, 0, lookup(var.compute_nodes[count.index], "node_count") < length(var.private_subnet_ids) ? lookup(var.compute_nodes[count.index], "node_count") : length(var.private_subnet_ids))}"
+    "${slice(var.private_subnet_ids, 0, lookup(var.compute_nodes[count.index], "node_count") < length(var.private_subnet_ids) ? lookup(var.compute_nodes[count.index], "node_count") : length(var.private_subnet_ids))}",
   ]
 
   name                      = "${var.platform_name}-compute-node-${lookup(var.compute_nodes[count.index], "instance_type")}"

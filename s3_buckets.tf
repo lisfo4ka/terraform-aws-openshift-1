@@ -32,7 +32,7 @@ POLICY
 }
 
 resource "aws_s3_bucket" "openshift_registry_storage" {
-  bucket = "${var.platform_name}-${local.openshift_registry_s3_bucket_name}-${data.aws_caller_identity.current.account_id}"
+  bucket        = "${var.platform_name}-${local.openshift_registry_s3_bucket_name}-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = true
 

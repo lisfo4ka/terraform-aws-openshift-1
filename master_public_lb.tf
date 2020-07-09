@@ -5,6 +5,7 @@ resource "aws_lb" "master-alb" {
   subnets                          = ["${var.public_subnet_ids}"]
   load_balancer_type               = "application"
   enable_cross_zone_load_balancing = true
+  idle_timeout                     = 300
 
   security_groups = [
     "${coalescelist(concat(var.master_public_security_group_ids), concat(aws_security_group.master_public.*.id, aws_security_group.node.*.id))}",
