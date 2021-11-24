@@ -8,7 +8,7 @@ resource "aws_launch_configuration" "master" {
 
   key_name             = "${var.ssh_key_pair_name}"
   user_data            = "${data.template_file.master_node_init.rendered}"
-  iam_instance_profile = "${var.create_iam_profiles ? coalesce(var.master_node_iam_profile_name, join("",aws_iam_instance_profile.master.*.name)) : var.master_node_iam_profile_name}"
+  iam_instance_profile = "${var.create_iam_profiles ? coalesce(var.master_node_iam_profile_name, join("", aws_iam_instance_profile.master.*.name)) : var.master_node_iam_profile_name}"
   spot_price           = "${var.master_spot_price}"
 
   lifecycle {
@@ -47,6 +47,7 @@ resource "aws_autoscaling_group" "master" {
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.master.name}"
   suspended_processes       = ["${var.asg_suspended_processes}"]
+  enabled_metrics           = ["${var.enabled_metrics}"]
 
   # FIXME (will not work with internal deployment)
   target_group_arns = ["${aws_lb_target_group.master_secure.arn}"]

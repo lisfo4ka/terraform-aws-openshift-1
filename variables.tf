@@ -148,3 +148,8 @@ variable infra_lb_listeners {
   type        = "list"
   description = "List of maps for using as listners foc Classic LB"
 }
+
+variable "enabled_metrics" {
+  type        = "list"
+  description = "A list of metrics to collect from nodes"
+}
