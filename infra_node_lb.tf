@@ -1,7 +1,9 @@
 resource "aws_elb" "infra" {
   name     = "${var.platform_name}-infra-${var.internet_facing}"
-  internal = "${var.internet_facing == "external" ? 0 : 1 }"
+  internal = "${var.internet_facing == "external" ? 0 : 1}"
   subnets  = ["${split(",", var.internet_facing == "external" ? join(",", var.public_subnet_ids) : join(",", var.private_subnet_ids))}"]
+
+  idle_timeout = 90
 
   security_groups = [
     "${coalescelist(concat(var.infra_public_security_group_ids), concat(aws_security_group.platform_public.*.id, aws_security_group.node.*.id))}",
@@ -22,7 +24,7 @@ resource "aws_elb" "infra" {
     instance_protocol  = "https"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "${coalesce(var.certificate_arn, join("",aws_acm_certificate_validation.openshift-cluster.*.certificate_arn))}"
+    ssl_certificate_id = "${coalesce(var.certificate_arn, join("", aws_acm_certificate_validation.openshift-cluster.*.certificate_arn))}"
   }
 
   health_check {
@@ -36,7 +38,7 @@ resource "aws_elb" "infra" {
 
 resource "aws_lb" "infra_alb" {
   name                             = "${var.platform_name}-infra-alb"
-  internal                         = "${var.internet_facing == "external" ? 0 : 1 }"
+  internal                         = "${var.internet_facing == "external" ? 0 : 1}"
   subnets                          = ["${split(",", var.internet_facing == "external" ? join(",", var.public_subnet_ids) : join(",", var.private_subnet_ids))}"]
   load_balancer_type               = "application"
   enable_cross_zone_load_balancing = true
@@ -59,7 +61,7 @@ resource "aws_lb_listener" "infra_alb" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "${coalesce(var.certificate_arn, join("",aws_acm_certificate_validation.openshift-cluster.*.certificate_arn))}"
+  certificate_arn   = "${coalesce(var.certificate_arn, join("", aws_acm_certificate_validation.openshift-cluster.*.certificate_arn))}"
 
   default_action {
     target_group_arn = "${aws_lb_target_group.infra_alb.arn}"

@@ -3,6 +3,8 @@ resource "aws_elb" "master" {
   internal = true
   subnets  = ["${var.private_subnet_ids}"]
 
+  idle_timeout = 300
+
   security_groups = ["${coalescelist(var.cluster_internal_security_group_ids, aws_security_group.node.*.id)}"]
 
   access_logs {
